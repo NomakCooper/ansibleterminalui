@@ -1,0 +1,84 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-auto border-t border-zinc-800 bg-zinc-950">
+  <div class="section-wrap py-10">
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+      <div class="space-y-3">
+        <div class="flex items-center gap-2">
+          <span class="font-mono text-lg text-cyan-400">▶</span>
+          <span class="font-mono font-bold text-zinc-50">ansi-tui</span>
+          <span class="badge-zinc">v0.1.0</span>
+        </div>
+        <p class="text-sm leading-relaxed text-zinc-500">
+          Ansible Terminal User Interface.<br />
+          MIT License · Node.js 18+
+        </p>
+        <p class="font-mono text-xs text-zinc-600">No cloud. No telemetry. No account required.</p>
+      </div>
+
+      <div class="space-y-3">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Resources</h3>
+        <ul class="space-y-2">
+          {[
+            { href: 'https://github.com/3A2DEV/ansi-tui', label: 'GitHub Repository' },
+            { href: 'https://www.npmjs.com/package/@3a2dev/ansi-tui', label: 'npm Package' },
+            { href: '/features', label: 'Features' },
+            { href: '/install', label: 'Installation Guide' },
+            { href: '/changelog', label: 'Changelog' },
+          ].map(({ href, label }) => (
+            <li>
+              <a
+                href={href}
+                class="text-sm text-zinc-400 transition-colors hover:text-cyan-400"
+                {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              >
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="space-y-3">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Quick Install</h3>
+        <div class="code-block space-y-2">
+          <div>
+            <p class="mb-1 text-xs text-zinc-500"># global install</p>
+            <p class="text-cyan-400">npm install -g @3a2dev/ansi-tui</p>
+          </div>
+          <div>
+            <p class="mb-1 text-xs text-zinc-500"># or run without installing</p>
+            <p class="text-cyan-400">npx @3a2dev/ansi-tui</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 flex flex-col items-center justify-between gap-3 border-t border-zinc-800 pt-6 sm:flex-row">
+      <p class="text-xs text-zinc-600">
+        © {year} <a href="https://github.com/3A2DEV" class="transition-colors hover:text-zinc-400">3A2DEV</a>
+        · Built with <a href="https://astro.build" class="transition-colors hover:text-zinc-400">Astro</a>
+      </p>
+      <div class="flex items-center gap-4">
+        <a
+          href="https://github.com/3A2DEV/ansi-tui/blob/main/LICENSE"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-xs text-zinc-600 transition-colors hover:text-zinc-400"
+        >
+          MIT License
+        </a>
+        <a
+          href="https://github.com/3A2DEV/ansi-tui/blob/main/CONTRIBUTING.md"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-xs text-zinc-600 transition-colors hover:text-zinc-400"
+        >
+          Contributing
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>

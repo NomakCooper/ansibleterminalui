@@ -1,0 +1,128 @@
+---
+import { allDependencies, developmentDependencies, packageVersion, runtimeDependencies } from '../data/dependencies';
+
+const groups = [
+  {
+    badge: 'Runtime',
+    title: 'Runtime dependencies',
+    description: 'Packages shipped with the CLI and required when ansi-tui is actually running.',
+    items: runtimeDependencies,
+    badgeClass: 'badge-cyan',
+  },
+  {
+    badge: 'Dev',
+    title: 'Development dependencies',
+    description: 'Packages used to build, typecheck, lint, and test ansi-tui before release.',
+    items: developmentDependencies,
+    badgeClass: 'badge-violet',
+  },
+];
+---
+
+<section class="bg-zinc-900/30 py-20">
+  <div class="section-wrap">
+    <div class="mb-14 space-y-3 text-center">
+      <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+        Direct package <span class="gradient-text">dependencies</span>
+      </h2>
+      <p class="mx-auto max-w-3xl text-lg text-zinc-400">
+        A direct dependency snapshot for <code class="rounded bg-zinc-900 px-1.5 py-0.5 font-mono text-sm text-cyan-400">@3a2dev/ansi-tui</code>
+        v{packageVersion}, including what each package provides and why it exists in the CLI.
+      </p>
+    </div>
+
+    <div class="mb-10 grid grid-cols-1 gap-4 lg:grid-cols-[0.75fr_1.25fr]">
+      <div class="rounded-2xl border border-zinc-800 bg-zinc-950/80 p-6">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-cyan-400">Dependency Surface</p>
+        <div class="mt-4 grid grid-cols-3 gap-3">
+          <div class="rounded-xl border border-zinc-800 bg-zinc-900 p-4 text-center">
+            <p class="text-2xl font-bold text-zinc-50">{allDependencies.length}</p>
+            <p class="mt-1 text-xs uppercase tracking-wide text-zinc-500">direct packages</p>
+          </div>
+          <div class="rounded-xl border border-zinc-800 bg-zinc-900 p-4 text-center">
+            <p class="text-2xl font-bold text-cyan-400">{runtimeDependencies.length}</p>
+            <p class="mt-1 text-xs uppercase tracking-wide text-zinc-500">runtime</p>
+          </div>
+          <div class="rounded-xl border border-zinc-800 bg-zinc-900 p-4 text-center">
+            <p class="text-2xl font-bold text-violet-400">{developmentDependencies.length}</p>
+            <p class="mt-1 text-xs uppercase tracking-wide text-zinc-500">development</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-zinc-800 bg-zinc-950/80 p-6">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-cyan-400">Scope</p>
+        <p class="mt-4 leading-relaxed text-zinc-400">
+          This section documents only the direct dependencies declared by the published npm package. Transitive dependencies are intentionally omitted so the stack stays easy to audit.
+        </p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <span class="badge-cyan">published package snapshot</span>
+          <span class="badge-zinc">runtime + dev grouped</span>
+          <span class="badge-zinc">direct deps only</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-10">
+      {groups.map(({ badge, title, description, items, badgeClass }) => (
+        <div class="space-y-4">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div class="space-y-2">
+              <span class:list={[badgeClass]}>{badge}</span>
+              <h3 class="text-2xl font-bold text-zinc-100">{title}</h3>
+              <p class="text-zinc-400">{description}</p>
+            </div>
+            <span class="badge-zinc">{items.length} direct packages</span>
+          </div>
+
+          <div class="space-y-3 lg:hidden">
+            {items.map(({ name, version, detail, why }) => (
+              <article class="rounded-xl border border-zinc-800 bg-zinc-950 p-4">
+                <div class="flex flex-wrap items-center gap-2">
+                  <code class="font-mono text-xs text-cyan-400">{name}</code>
+                  <span class="badge-zinc font-mono">{version}</span>
+                </div>
+                <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-zinc-600">Details</p>
+                <p class="mt-1 text-sm leading-relaxed text-zinc-400">{detail}</p>
+                <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-zinc-600">Why ansi-tui uses it</p>
+                <p class="mt-1 text-sm leading-relaxed text-zinc-500">{why}</p>
+              </article>
+            ))}
+          </div>
+
+          <div class="hidden overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 lg:block">
+            <div class="overflow-x-auto">
+              <table class="w-full min-w-[58rem] text-sm">
+                <thead>
+                  <tr class="border-b border-zinc-800 bg-zinc-900">
+                    <th class="px-4 py-3 text-left font-semibold text-zinc-400">Package</th>
+                    <th class="px-4 py-3 text-left font-semibold text-zinc-400">Version</th>
+                    <th class="px-4 py-3 text-left font-semibold text-zinc-400">Details</th>
+                    <th class="px-4 py-3 text-left font-semibold text-zinc-400">Why ansi-tui uses it</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map(({ name, version, detail, why }, index) => (
+                    <tr class:list={[
+                      'border-b border-zinc-800/60 align-top transition-colors hover:bg-zinc-900/50',
+                      index % 2 === 0 ? 'bg-zinc-950' : 'bg-zinc-900/20',
+                    ]}>
+                      <td class="px-4 py-3.5">
+                        <code class="font-mono text-xs text-cyan-400">{name}</code>
+                      </td>
+                      <td class="px-4 py-3.5">
+                        <span class="badge-zinc font-mono">{version}</span>
+                      </td>
+                      <td class="px-4 py-3.5 text-zinc-400">{detail}</td>
+                      <td class="px-4 py-3.5 text-zinc-500">{why}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

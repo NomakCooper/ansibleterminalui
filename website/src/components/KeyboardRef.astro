@@ -1,0 +1,318 @@
+---
+import { shortcutGroups } from '../data/shortcuts';
+
+type KeyTone = 'muted' | 'zinc' | 'cyan' | 'green' | 'violet' | 'warning';
+
+interface KeyDef {
+  key: string;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'space' | 'np0';
+  tone?: KeyTone;
+  label?: string;
+}
+
+const functionRow: KeyDef[] = [
+  { key: 'Esc', size: 'sm', tone: 'zinc', label: 'Back' },
+  { key: 'F1' },
+  { key: 'F2' },
+  { key: 'F3' },
+  { key: 'F4' },
+  { key: 'F5' },
+  { key: 'F6' },
+  { key: 'F7' },
+  { key: 'F8' },
+  { key: 'F9' },
+  { key: 'F10' },
+  { key: 'F11' },
+  { key: 'F12' },
+];
+
+const alphaRows: KeyDef[][] = [
+  [
+    { key: '`' },
+    { key: '1' },
+    { key: '2' },
+    { key: '3' },
+    { key: '4' },
+    { key: '5' },
+    { key: '6' },
+    { key: '7' },
+    { key: '8' },
+    { key: '9' },
+    { key: '0' },
+    { key: '-' },
+    { key: '=' },
+    { key: 'Backspace', size: 'xl' },
+  ],
+  [
+    { key: 'Tab', size: 'md', tone: 'zinc', label: 'Next field' },
+    { key: 'Q', tone: 'warning', label: 'Quit' },
+    { key: 'W' },
+    { key: 'E' },
+    { key: 'R' },
+    { key: 'T', size: 'sm', tone: 'violet', label: 'Theme' },
+    { key: 'Y' },
+    { key: 'U' },
+    { key: 'I' },
+    { key: 'O' },
+    { key: 'P' },
+    { key: '[' },
+    { key: ']' },
+    { key: '\\', size: 'sm' },
+  ],
+  [
+    { key: 'Caps', size: 'lg' },
+    { key: 'A' },
+    { key: 'S', size: 'sm', tone: 'cyan', label: 'Session' },
+    { key: 'D' },
+    { key: 'F', size: 'sm', tone: 'green', label: 'with Ctrl' },
+    { key: 'G' },
+    { key: 'H' },
+    { key: 'J' },
+    { key: 'K' },
+    { key: 'L' },
+    { key: ';' },
+    { key: "'" },
+    { key: 'Enter', size: 'xxl', tone: 'cyan', label: 'Confirm' },
+  ],
+  [
+    { key: 'Shift', size: 'xl' },
+    { key: 'Z' },
+    { key: 'X' },
+    { key: 'C' },
+    { key: 'V' },
+    { key: 'B' },
+    { key: 'N' },
+    { key: 'M' },
+    { key: ',' },
+    { key: '.' },
+    { key: '/' },
+    { key: 'Shift', size: 'xxl' },
+  ],
+  [
+    { key: 'Ctrl', size: 'sm', tone: 'green', label: 'Hold' },
+    { key: 'Fn', size: 'xs' },
+    { key: 'Alt', size: 'xs' },
+    { key: 'Cmd', size: 'sm' },
+    { key: 'Space', size: 'space', tone: 'green', label: 'Pause output' },
+    { key: 'Cmd', size: 'sm' },
+    { key: 'Alt', size: 'xs' },
+    { key: 'Ctrl', size: 'sm' },
+  ],
+];
+
+const alphaRowOffsets = ['', 'ml-4 sm:ml-5', 'ml-6 sm:ml-8', 'ml-8 sm:ml-10', 'ml-2 sm:ml-3'];
+
+const navRows: KeyDef[][] = [
+  [
+    { key: 'Prt' },
+    { key: 'Scr' },
+    { key: 'Pause' },
+  ],
+  [
+    { key: 'Ins' },
+    { key: 'Home' },
+    { key: 'PgUp' },
+  ],
+  [
+    { key: 'Del' },
+    { key: 'End' },
+    { key: 'PgDn' },
+  ],
+];
+
+const arrowRows: KeyDef[][] = [
+  [{ key: '↑', tone: 'zinc', label: 'Up' }],
+  [
+    { key: '←' },
+    { key: '↓', tone: 'zinc', label: 'Down' },
+    { key: '→', tone: 'cyan', label: 'Expand' },
+  ],
+];
+
+const toneClasses: Record<KeyTone, string> = {
+  muted: 'border-zinc-800 bg-gradient-to-b from-zinc-900 to-zinc-950 text-zinc-500',
+  zinc: 'border-zinc-600 bg-gradient-to-b from-zinc-800 to-zinc-900 text-zinc-200',
+  cyan: 'border-cyan-400/35 bg-gradient-to-b from-cyan-400/18 to-cyan-400/8 text-cyan-300',
+  green: 'border-green-400/35 bg-gradient-to-b from-green-400/18 to-green-400/8 text-green-300',
+  violet: 'border-violet-400/35 bg-gradient-to-b from-violet-400/18 to-violet-400/8 text-violet-300',
+  warning: 'border-yellow-400/35 bg-gradient-to-b from-yellow-400/18 to-yellow-400/8 text-yellow-300',
+};
+
+const sizeClasses: Record<NonNullable<KeyDef['size']> | 'normal', string> = {
+  normal: 'w-11 sm:w-12 lg:w-[3.35rem]',
+  xs: 'w-13 sm:w-15 lg:w-[3.85rem]',
+  sm: 'w-16 sm:w-[4.35rem] lg:w-[4.75rem]',
+  md: 'w-20 sm:w-[5.25rem] lg:w-[5.85rem]',
+  lg: 'w-24 sm:w-[6rem] lg:w-[6.65rem]',
+  xl: 'w-28 sm:w-[7rem] lg:w-[7.75rem]',
+  xxl: 'w-32 sm:w-[8.25rem] lg:w-[8.9rem]',
+  space: 'min-w-[11rem] flex-1',
+  np0: 'w-[4.75rem] sm:w-[5.25rem] lg:w-[5.75rem]',
+};
+
+function classesFor(key: KeyDef, extra = '') {
+  return [
+    'relative flex h-12 flex-col rounded-[0.8rem] border px-2.5 py-2 shadow-[0_10px_18px_rgba(0,0,0,0.18)] before:absolute before:inset-x-1 before:top-1 before:h-px before:rounded-full before:bg-white/8 sm:h-14 lg:h-[3.95rem]',
+    sizeClasses[key.size ?? 'normal'],
+    toneClasses[key.tone ?? 'muted'],
+    extra,
+  ].join(' ');
+}
+
+function shortcutBadgeClass(key: string) {
+  if (key === 'q') {
+    return 'badge border-yellow-400/25 bg-yellow-400/10 text-yellow-300';
+  }
+
+  if (['s', 'Enter', '→'].includes(key)) {
+    return 'badge-cyan';
+  }
+
+  if (['Ctrl+F', 'Space'].includes(key)) {
+    return 'badge-green';
+  }
+
+  if (key === 't') {
+    return 'badge-violet';
+  }
+
+  return 'badge-zinc';
+}
+---
+
+<section class="py-20">
+  <div class="section-wrap">
+    <div class="mb-14 space-y-3 text-center">
+      <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+        Designed for <span class="gradient-text">keyboard.</span> Always.
+      </h2>
+      <p class="mx-auto max-w-2xl text-lg text-zinc-400">
+        ansi-tui is built around a real keyboard flow: highlighted keys show the shortcuts you actually use while navigating, editing forms, and running commands.
+      </p>
+    </div>
+
+    <div class="mx-auto max-w-6xl rounded-[2rem] border border-zinc-700 bg-gradient-to-b from-zinc-900 to-zinc-950 p-3 shadow-[0_32px_80px_rgba(0,0,0,0.35)] sm:p-4 lg:p-5">
+      <div class="rounded-[1.65rem] border border-zinc-800 bg-zinc-950/95 p-4 sm:p-6 lg:p-8">
+        <div class="mb-6 flex items-center justify-between gap-4 border-b border-zinc-800 pb-4">
+          <div>
+            <p class="font-mono text-xs uppercase tracking-[0.2em] text-cyan-400">Visual Keyboard</p>
+            <p class="mt-1 text-sm text-zinc-500">Keyboard navigation layout.</p>
+          </div>
+          <div class="hidden flex-wrap gap-2 sm:flex">
+            <span class="badge-zinc">terminal first</span>
+            <span class="badge-zinc">mouse optional</span>
+          </div>
+        </div>
+
+        <div class="xl:hidden">
+          <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {shortcutGroups.map(({ label, keys }) => (
+              <div class="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-4">
+                <p class="font-mono text-xs uppercase tracking-[0.2em] text-cyan-400">{label}</p>
+                <div class="mt-4 space-y-3">
+                  {keys.map(({ key, action }) => (
+                    <div class="flex items-start gap-3 rounded-xl border border-zinc-800 bg-zinc-950/80 p-3">
+                      <span class:list={[shortcutBadgeClass(key), 'shrink-0 font-mono text-xs']}>
+                        {key}
+                      </span>
+                      <span class="text-sm leading-relaxed text-zinc-400">{action}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div class="mt-4 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 font-mono text-xs leading-relaxed text-zinc-500">
+            Small screens use a condensed shortcut map instead of the full desktop keyboard so the core navigation keys stay readable without sideways scrolling.
+          </div>
+        </div>
+
+        <div class="hidden space-y-5 xl:block">
+          <div class="flex flex-wrap gap-2">
+            {functionRow.map((key, index) => (
+              <>
+                {index === 1 && <div class="hidden w-3 sm:block"></div>}
+                {index === 5 && <div class="hidden w-3 sm:block"></div>}
+                {index === 9 && <div class="hidden w-3 sm:block"></div>}
+                <div class={classesFor(key)}>
+                  <span class="truncate font-mono text-[10px] font-semibold uppercase tracking-wide sm:text-[11px]">{key.key}</span>
+                  {key.label ? (
+                    <span class="overflow-hidden text-ellipsis whitespace-nowrap text-[8px] leading-tight tracking-tight opacity-95 sm:text-[9px]">{key.label}</span>
+                  ) : (
+                    <span class="opacity-0">.</span>
+                  )}
+                </div>
+              </>
+            ))}
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-start">
+            <div class="space-y-2">
+              {alphaRows.map((row, index) => (
+                <div class:list={['flex gap-2 overflow-x-auto pb-1', alphaRowOffsets[index]]}>
+                  {row.map((key) => (
+                    <div class={classesFor(key)}>
+                      <span class:list={[
+                        'truncate font-mono text-[10px] font-semibold tracking-wide sm:text-[11px]',
+                        key.key.length <= 2 ? 'uppercase' : 'normal-case',
+                      ]}>{key.key}</span>
+                      {key.label ? (
+                        <span class="mt-auto overflow-hidden text-ellipsis whitespace-nowrap text-[8px] leading-tight tracking-tight opacity-95 sm:text-[9px]">{key.label}</span>
+                      ) : (
+                        <span class="mt-auto block h-2"></span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+
+            <div class="flex h-full flex-col justify-between space-y-2">
+              <div class="space-y-2">
+                {navRows.map((row) => (
+                  <div class="flex justify-start gap-2 xl:justify-center">
+                    {row.map((key) => (
+                      <div class={classesFor(key)}>
+                        <span class:list={[
+                          'truncate font-mono text-[10px] font-semibold tracking-wide sm:text-[11px]',
+                          key.key.length <= 3 ? 'uppercase' : 'normal-case',
+                        ]}>{key.key}</span>
+                        <span class="mt-auto block h-2"></span>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+
+              <div class="flex justify-start xl:justify-center xl:pb-[0.2rem]">
+                <div class="grid w-fit grid-cols-3 gap-2">
+                  <div></div>
+                  <div class={classesFor(arrowRows[0][0])}>
+                    <span class="font-mono text-[10px] font-semibold tracking-wide sm:text-[11px]">↑</span>
+                    <span class="mt-auto overflow-hidden text-ellipsis whitespace-nowrap text-[8px] leading-tight tracking-tight opacity-95 sm:text-[9px]">Up</span>
+                  </div>
+                  <div></div>
+                  {arrowRows[1].map((key) => (
+                    <div class={classesFor(key)}>
+                      <span class="font-mono text-[10px] font-semibold tracking-wide sm:text-[11px]">{key.key}</span>
+                      {key.label ? (
+                        <span class="mt-auto overflow-hidden text-ellipsis whitespace-nowrap text-[8px] leading-tight tracking-tight opacity-95 sm:text-[9px]">{key.label}</span>
+                      ) : (
+                        <span class="mt-auto block h-2"></span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-t border-zinc-800 pt-4 text-center font-mono text-xs text-zinc-600">
+            Hold <span class="text-green-400">Ctrl</span> and press <span class="text-green-400">F</span> to open the path picker. Use <span class="text-cyan-400">Enter</span> to confirm, <span class="text-cyan-400">→</span> to expand, and <span class="text-green-400">Space</span> to pause streamed output.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

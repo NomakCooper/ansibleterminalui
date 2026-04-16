@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg: theme('colors.zinc.950');
+    --color-surface: theme('colors.zinc.900');
+    --color-panel: theme('colors.zinc.800');
+    --color-border: theme('colors.zinc.700');
+    --color-text: theme('colors.zinc.50');
+    --color-muted: theme('colors.zinc.400');
+    --color-accent: theme('colors.cyan.400');
+    --color-violet: theme('colors.violet.500');
+  }
+
+  html {
+    @apply scroll-smooth bg-zinc-950 text-zinc-50;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  body {
+    @apply antialiased;
+  }
+
+  ::selection {
+    @apply bg-cyan-400/20 text-zinc-50;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-zinc-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-zinc-600;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-zinc-500;
+  }
+}
+
+@layer components {
+  .terminal-frame {
+    @apply overflow-hidden rounded-lg border border-zinc-700 bg-zinc-900;
+  }
+
+  .hero-typewriter {
+    @apply block max-w-full;
+  }
+
+  .hero-typewriter::part(typewriter)::after {
+    width: 2px;
+    background-color: theme('colors.cyan.400');
+  }
+
+  .command-typewriter {
+    @apply inline-block max-w-full;
+  }
+
+  .command-typewriter::part(typewriter)::after {
+    width: 0.55em;
+    height: 1.05em;
+    margin-left: 0.1em;
+    border-radius: 1px;
+    background-color: theme('colors.cyan.400');
+  }
+
+  .terminal-titlebar {
+    @apply flex items-center gap-2 border-b border-zinc-700 bg-zinc-800 px-4 py-3;
+  }
+
+  .terminal-dot {
+    @apply h-3 w-3 rounded-full;
+  }
+
+  .code-block {
+    @apply overflow-x-auto rounded-lg border border-zinc-700 bg-zinc-900 p-4 font-mono text-sm;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-cyan-400 to-violet-500 bg-clip-text text-transparent;
+  }
+
+  .section-wrap {
+    @apply mx-auto max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded border px-2 py-0.5 font-mono text-xs font-medium;
+  }
+
+  .badge-cyan {
+    @apply badge border-cyan-400/20 bg-cyan-400/10 text-cyan-400;
+  }
+
+  .badge-violet {
+    @apply badge border-violet-500/20 bg-violet-500/10 text-violet-400;
+  }
+
+  .badge-green {
+    @apply badge border-green-500/20 bg-green-500/10 text-green-400;
+  }
+
+  .badge-zinc {
+    @apply badge border-zinc-700 bg-zinc-800 text-zinc-300;
+  }
+
+}

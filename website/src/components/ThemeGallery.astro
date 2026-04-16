@@ -1,0 +1,83 @@
+---
+import { themes } from '../data/themes';
+---
+
+<section class="bg-zinc-900/30 py-20">
+  <div class="section-wrap">
+    <div class="mb-14 space-y-3 text-center">
+      <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+        Your terminal. <span class="gradient-text">Your color.</span>
+      </h2>
+      <p class="text-lg text-zinc-400">
+        8 built-in themes. Press <kbd class="rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 font-mono text-sm text-zinc-300">t</kbd> to cycle them live.
+      </p>
+    </div>
+
+    <div class="mb-12 grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+      <div class="terminal-frame overflow-hidden shadow-2xl shadow-black/30">
+        <div class="terminal-titlebar">
+          <span class="terminal-dot bg-red-500"></span>
+          <span class="terminal-dot bg-yellow-500"></span>
+          <span class="terminal-dot bg-green-500"></span>
+          <span class="ml-3 flex-1 select-none text-center font-mono text-xs text-zinc-500">
+            ansi-tui theme cycling
+          </span>
+        </div>
+        <img
+          src="/theme-cycle.gif"
+          alt="ansi-tui cycling through multiple built-in terminal themes"
+          class="block h-auto w-full bg-zinc-950"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+
+      <div class="space-y-4 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-6">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-cyan-400">Live Theme Preview</p>
+        <h3 class="text-2xl font-bold text-zinc-100">Cycle the whole workstation without leaving the keyboard</h3>
+        <p class="leading-relaxed text-zinc-400">
+          Theme changes apply across the shell, panels, health matrix, footer, and live execution views.
+          The result stays terminal-native instead of feeling like a web skin pasted on top.
+        </p>
+        <div class="flex flex-wrap gap-2 pt-2">
+          <span class="badge-cyan">press t</span>
+          <span class="badge-zinc">8 built-in palettes</span>
+          <span class="badge-zinc">live switch</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      {themes.map(({ name, character, bg, accent, secondary, preview }) => (
+        <div class="group relative cursor-default overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 transition-all duration-200 hover:border-zinc-600">
+          <div class="relative h-20 overflow-hidden" style={`background-color: ${bg};`}>
+            <div class="absolute inset-0 flex">
+              {preview.map((color, i) => (
+                <div class="flex-1" style={`background-color: ${color}; opacity: ${0.3 + i * 0.2};`}></div>
+              ))}
+            </div>
+            <div class="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-black/35 to-transparent"></div>
+            <div class="absolute bottom-2 left-3 z-10 flex items-center gap-1.5">
+              <div class="h-3 w-3 rounded-full border border-white/20" style={`background-color: ${accent};`}></div>
+              <div class="h-3 w-3 rounded-full border border-white/10" style={`background-color: ${secondary};`}></div>
+            </div>
+            <div class="absolute left-3 top-3 space-y-1 opacity-60">
+              <div class="h-1 w-12 rounded-full" style={`background-color: ${accent};`}></div>
+              <div class="h-1 w-8 rounded-full" style={`background-color: ${secondary};`}></div>
+              <div class="h-1 w-10 rounded-full" style={`background-color: ${accent}; opacity: 0.5;`}></div>
+            </div>
+          </div>
+
+          <div class="min-h-[4.75rem] border-t border-zinc-800 bg-zinc-950 px-3 py-3.5">
+            <p class="text-sm font-semibold text-zinc-100">{name}</p>
+            <p class="mt-1 text-xs leading-relaxed text-zinc-500">{character}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <p class="mt-6 text-center font-mono text-sm text-zinc-600">
+      Press <span class="text-zinc-400">t</span> in any screen to cycle themes live.
+    </p>
+  </div>
+</section>

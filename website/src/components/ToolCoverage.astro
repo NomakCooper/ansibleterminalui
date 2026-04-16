@@ -1,0 +1,65 @@
+---
+import { displayedActionCount, tools, totalActions } from '../data/tools';
+---
+
+<section class="py-20">
+  <div class="section-wrap">
+    <div class="mb-14 space-y-3 text-center">
+      <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+        Every <code class="font-mono text-3xl text-cyan-400">ansible-*</code> command.<br />
+        <span class="gradient-text">All in one place.</span>
+      </h2>
+      <p class="text-lg text-zinc-400">
+        {tools.length} first-class interactive tools · {displayedActionCount} supported actions
+        <span class="ml-2 hidden text-xs text-zinc-600 sm:inline">({totalActions} defined actions in the current matrix)</span>
+      </p>
+    </div>
+
+    <div class="overflow-hidden rounded-xl border border-zinc-800">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-zinc-800 bg-zinc-900">
+              <th class="px-4 py-3 text-left font-semibold text-zinc-400">Tool</th>
+              <th class="hidden px-4 py-3 text-left font-semibold text-zinc-400 sm:table-cell">Actions</th>
+              <th class="px-4 py-3 text-left font-semibold text-zinc-400">Count</th>
+              <th class="hidden px-4 py-3 text-left font-semibold text-zinc-400 lg:table-cell">Highlights</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tools.map(({ name, icon, actionCount, actions, highlights }, idx) => (
+              <tr class:list={['border-b border-zinc-800/60 transition-colors hover:bg-zinc-900/50', idx % 2 === 0 ? 'bg-zinc-950' : 'bg-zinc-900/20']}>
+                <td class="px-4 py-3.5">
+                  <div class="flex items-center gap-2">
+                    <span class="w-5 text-center font-mono text-base text-cyan-400">{icon}</span>
+                    <code class="font-mono text-xs text-zinc-200">{name}</code>
+                  </div>
+                </td>
+                <td class="hidden px-4 py-3.5 sm:table-cell">
+                  <div class="flex max-w-xs flex-wrap gap-1">
+                    {actions.slice(0, 5).map((action) => (
+                      <span class="badge-zinc text-xs">{action}</span>
+                    ))}
+                    {actions.length > 5 && (
+                      <span class="badge border-zinc-700 bg-zinc-800 text-xs text-zinc-500">+{actions.length - 5} more</span>
+                    )}
+                  </div>
+                </td>
+                <td class="px-4 py-3.5">
+                  <span class="badge-cyan font-mono">{actionCount}</span>
+                </td>
+                <td class="hidden px-4 py-3.5 lg:table-cell">
+                  <span class="text-xs leading-relaxed text-zinc-500">{highlights}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="mt-4 text-center font-mono text-xs text-zinc-600">
+      All tools follow the same four-phase workflow: select, form, preview, execute.
+    </p>
+  </div>
+</section>

@@ -1,0 +1,103 @@
+---
+const features = [
+  {
+    icon: '▶',
+    title: '11 interactive tools',
+    description:
+      'Full coverage of ansible-playbook, ansible-galaxy, ansible-vault, ansible-inventory, ansible-doc, ansible-config, ansible-lint, ansible-builder, ansible-creator, ansible-test, and ansible-console.',
+    accent: 'cyan',
+  },
+  {
+    icon: '⚡',
+    title: '4-phase guided workflow',
+    description:
+      'Select action, fill the form, preview the command, then execute. The same workflow every time, on every tool.',
+    accent: 'yellow',
+  },
+  {
+    icon: '💾',
+    title: 'Session persistence',
+    description:
+      'Named workspaces with inventory, vault, proxy, tags, environment variables, and notes pre-filled per project or customer.',
+    accent: 'violet',
+  },
+  {
+    icon: '📺',
+    title: 'Live execution output',
+    description:
+      'Streaming ANSI-aware output with pause and resume, elapsed time, scroll controls, and a full output log recorded per job.',
+    accent: 'green',
+  },
+  {
+    icon: '🎨',
+    title: '8 color themes',
+    description:
+      'Cyan, Blue, White, Gray, Yellow, Violet, Red, and Neon. Press t to cycle through them live in the terminal.',
+    accent: 'violet',
+  },
+  {
+    icon: '🏢',
+    title: 'Enterprise-ready',
+    description:
+      'Proxy-aware, offline-installable, no Docker required, and designed to run cleanly on jump hosts and shared systems.',
+    accent: 'cyan',
+  },
+  {
+    icon: '🧪',
+    title: '297 tests',
+    description:
+      'Unit, component, screen, hook, and integration coverage with CI running on Node.js 20, 22, and 24.',
+    accent: 'green',
+  },
+  {
+    icon: '⌨',
+    title: 'Keyboard-first',
+    description:
+      'Every action is reachable without a mouse, including navigation, forms, output scrolling, and the built-in path picker.',
+    accent: 'yellow',
+  },
+  {
+    icon: '🔒',
+    title: 'Local-first and safe',
+    description:
+      'Stored locally with masked password fields, explicit command preview, and array-mode execution to avoid shell-quoting risks.',
+    accent: 'red',
+  },
+];
+
+const accentMap: Record<string, string> = {
+  cyan: 'border-cyan-400/20 bg-cyan-400/10 text-cyan-400',
+  yellow: 'border-yellow-400/20 bg-yellow-400/10 text-yellow-400',
+  violet: 'border-violet-400/20 bg-violet-400/10 text-violet-400',
+  green: 'border-green-400/20 bg-green-400/10 text-green-400',
+  red: 'border-red-400/20 bg-red-400/10 text-red-400',
+};
+---
+
+<section id="features" class="py-20">
+  <div class="section-wrap">
+    <div class="mb-14 space-y-3 text-center">
+      <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+        Why <span class="gradient-text">ansi-tui</span>?
+      </h2>
+      <p class="mx-auto max-w-2xl text-lg text-zinc-400">
+        Everything you need to run Ansible confidently without leaving your terminal or opening a flag reference.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {features.map(({ icon, title, description, accent }) => (
+        <div class="group relative rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 transition-all duration-200 hover:border-zinc-700 hover:bg-zinc-900">
+          <div class:list={['mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg border text-lg', accentMap[accent]]}>
+            {icon}
+          </div>
+
+          <h3 class="mb-2 font-semibold text-zinc-50">{title}</h3>
+          <p class="text-sm leading-relaxed text-zinc-400">{description}</p>
+
+          <div class="pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-br from-cyan-400/0 to-violet-500/0 transition-all duration-300 group-hover:from-cyan-400/3 group-hover:to-violet-500/3"></div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

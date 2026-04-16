@@ -1,0 +1,102 @@
+---
+const phases = [
+  {
+    number: '01',
+    title: 'Action Select',
+    description: 'Pick the Ansible tool and action you want to run from a guided sidebar.',
+    icon: '⊞',
+    detail: 'Grouped sidebar by tool, then expand and choose the action',
+  },
+  {
+    number: '02',
+    title: 'Parameter Form',
+    description: 'Fill the form with path browsing, session defaults, and validation before execution.',
+    icon: '≡',
+    detail: 'Auto-filled from active session and Ctrl+F opens the picker',
+  },
+  {
+    number: '03',
+    title: 'Command Preview',
+    description: 'Inspect the exact argv and flags before anything runs so there are no surprises.',
+    icon: '▶',
+    detail: 'Exact command preview with validation state before run',
+  },
+  {
+    number: '04',
+    title: 'Execute',
+    description: 'Stream live output with ANSI rendering, scrolling, pause and resume, and automatic job logging.',
+    icon: '⚡',
+    detail: 'Real execution, live output, and durable history records',
+  },
+];
+---
+
+<section class="bg-zinc-900/30 py-20">
+  <div class="section-wrap">
+    <div class="mb-14 space-y-3 text-center">
+      <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+        One workflow for <span class="gradient-text">every Ansible command</span>
+      </h2>
+      <p class="mx-auto max-w-2xl text-lg text-zinc-400">
+        Every tool follows the same four-phase workflow. No docs needed. No flag memorisation.
+      </p>
+    </div>
+
+    <div class="hidden items-stretch gap-0 md:flex">
+      {phases.map(({ number, title, description, icon, detail }, idx) => (
+        <div class="group relative flex-1">
+          <div class="mx-1 h-full rounded-xl border border-zinc-800 bg-zinc-900 p-6 transition-all duration-200 hover:border-cyan-400/40 hover:bg-zinc-900/80">
+            <div class="mb-4 flex items-center gap-3">
+              <span class="font-mono text-4xl font-bold leading-none text-zinc-800">{number}</span>
+              <span class="text-2xl text-cyan-400">{icon}</span>
+            </div>
+            <h3 class="mb-2 font-bold text-zinc-50">{title}</h3>
+            <p class="mb-3 text-sm leading-relaxed text-zinc-400">{description}</p>
+            <p class="border-t border-zinc-800 pt-3 font-mono text-xs text-zinc-600">{detail}</p>
+          </div>
+
+          {idx < phases.length - 1 && (
+            <div class="absolute -right-3 top-1/2 z-10 -translate-y-1/2 text-lg text-zinc-600" aria-hidden="true">→</div>
+          )}
+        </div>
+      ))}
+    </div>
+
+    <div class="space-y-4 md:hidden">
+      {phases.map(({ number, title, description, icon, detail }, idx) => (
+        <div class="flex gap-4">
+          <div class="flex flex-col items-center">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-cyan-400/40 bg-cyan-400/10 font-mono text-sm font-bold text-cyan-400">
+              {number}
+            </div>
+            {idx < phases.length - 1 && <div class="my-2 w-px flex-1 bg-zinc-800" aria-hidden="true"></div>}
+          </div>
+          <div class="flex-1 pb-6">
+            <div class="mb-1 flex items-center gap-2">
+              <span class="text-xl">{icon}</span>
+              <h3 class="font-bold text-zinc-50">{title}</h3>
+            </div>
+            <p class="mb-1 text-sm leading-relaxed text-zinc-400">{description}</p>
+            <p class="font-mono text-xs text-zinc-600">{detail}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {[
+        'Forms auto-fill from the active session',
+        'Ctrl+F opens a built-in file or directory browser on path fields',
+        'Command preview shows exact flags and argv before run',
+        'Validation blocks execution when required inputs are missing',
+        'Esc returns to the previous step from any phase',
+        'Every execution is recorded in job history automatically',
+      ].map((callout) => (
+        <div class="flex items-start gap-2 text-sm text-zinc-400">
+          <span class="mt-0.5 shrink-0 text-cyan-400">✓</span>
+          {callout}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

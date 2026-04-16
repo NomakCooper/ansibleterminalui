@@ -1,0 +1,31 @@
+# macOS
+.DS_Store
+
+# Editor and local agent state
+.vscode/
+.claude/
+.qwen/
+.agents/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Node dependencies and build output
+node_modules/
+website/node_modules/
+website/.astro/
+website/dist/
+
+# Vercel local state
+.vercel/
+website/.vercel/
+
+# docs
+docs/
+*.md
+!README.md

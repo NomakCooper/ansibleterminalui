@@ -1,0 +1,317 @@
+---
+import DependencyMatrix from '../components/DependencyMatrix.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Features — ansi-tui"
+  description="Detailed ansi-tui feature breakdown: guided workflow, tool coverage, sessions, job history, live output, themes, and enterprise support."
+>
+  <Header />
+  <main>
+    <div class="border-b border-zinc-800 bg-zinc-900/30 py-16">
+      <div class="section-wrap space-y-4 text-center">
+        <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">
+          <span class="gradient-text">Features</span>
+        </h1>
+        <p class="mx-auto max-w-2xl text-xl text-zinc-400">Everything ansi-tui can do, in detail.</p>
+        <nav class="flex flex-wrap justify-center gap-3 pt-2">
+          {[
+            { href: '#sessions', label: 'Sessions' },
+            { href: '#jobs', label: 'Job History' },
+            { href: '#output', label: 'Live Output' },
+            { href: '#quality', label: 'Tests & Security' },
+            { href: '#dependencies', label: 'Dependencies' },
+            { href: '#enterprise', label: 'Enterprise' },
+          ].map(({ href, label }) => (
+            <a href={href} class="badge-zinc text-xs transition-colors hover:border-cyan-400/30 hover:text-cyan-400">
+              {label}
+            </a>
+          ))}
+        </nav>
+      </div>
+    </div>
+
+    <section id="sessions" class="bg-zinc-900/30 py-20">
+      <div class="section-wrap">
+        <div class="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
+          <div class="space-y-5">
+            <h2 class="text-3xl font-bold">Switch contexts like you switch branches</h2>
+            <p class="leading-relaxed text-zinc-400">
+              Sessions are named, persistent workspaces. Create one per project, environment, or customer and let ansi-tui carry the context forward into every tool form automatically.
+            </p>
+            <div class="space-y-2">
+              {[
+                'Keyboard: [s] from anywhere opens the Sessions screen',
+                '[n] creates, [e] edits, [d] deletes, and [Enter] activates',
+                'The active session auto-fills tool forms',
+                'Switching sessions refreshes defaults everywhere',
+              ].map((item) => (
+                <div class="flex items-start gap-2 text-sm text-zinc-400">
+                  <span class="mt-0.5 shrink-0 text-cyan-400">→</span>
+                  <span class="font-mono">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div class="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900">
+            <div class="border-b border-zinc-800 bg-zinc-800/50 px-5 py-3 font-mono text-xs text-zinc-400">Session data fields</div>
+            <div class="space-y-2 p-5">
+              {[
+                ['Name', 'Human-readable workspace identifier'],
+                ['Working directory', 'Base path for operations'],
+                ['Inventory', 'File, directory, or host list'],
+                ['Vault file', 'Password file path'],
+                ['Vault ID', 'Vault identity label'],
+                ['Extra vars', 'Additional -e variables'],
+                ['Environment vars', 'Proxy, tokens, API keys'],
+                ['ansible.cfg', 'Custom config path'],
+                ['Tags', 'Default tag filters'],
+                ['Notes', 'Operator guidance text'],
+              ].map(([key, value]) => (
+                <div class="flex items-start gap-3 border-b border-zinc-800/50 py-1 text-sm last:border-0">
+                  <code class="w-32 shrink-0 font-mono text-xs text-cyan-400">{key}</code>
+                  <span class="text-xs text-zinc-500">{value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="jobs" class="py-20">
+      <div class="section-wrap">
+        <div class="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
+          <div class="space-y-5">
+            <h2 class="text-3xl font-bold">Everything you ran. <span class="gradient-text">Nothing lost.</span></h2>
+            <p class="leading-relaxed text-zinc-400">
+              The Jobs screen records every execution with full fidelity: status badges, exact argv, exit codes, duration, timestamps, session context, and scrollable output.
+            </p>
+            <div class="grid grid-cols-2 gap-3 pt-2">
+              {[
+                { icon: '✓', label: 'Success and failure badges' },
+                { icon: '📋', label: 'Full command argv' },
+                { icon: '⏱', label: 'Duration and timestamp' },
+                { icon: '📺', label: 'Scrollable output log' },
+                { icon: '🗑', label: 'Delete job and log file' },
+                { icon: '📂', label: 'Per-session history' },
+              ].map(({ icon, label }) => (
+                <div class="flex items-center gap-2 text-sm text-zinc-400">
+                  <span>{icon}</span>
+                  {label}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div class="space-y-2 rounded-xl border border-zinc-800 bg-zinc-900 p-5 font-mono text-xs">
+            <div class="mb-3 border-b border-zinc-800 pb-3 text-zinc-500">Job History · recent</div>
+            {[
+              { tool: 'ansible-playbook', action: 'run', code: 0, duration: '1m 23s', time: '14:22' },
+              { tool: 'ansible-lint', action: 'run', code: 0, duration: '0m 08s', time: '14:18' },
+              { tool: 'ansible-galaxy', action: 'install', code: 1, duration: '0m 04s', time: '13:55' },
+              { tool: 'ansible-vault', action: 'encrypt', code: 0, duration: '0m 01s', time: '13:40' },
+            ].map(({ tool, action, code, duration, time }) => (
+              <div class="flex items-center gap-3 border-b border-zinc-800/40 py-1.5 last:border-0">
+                <span class:list={[code === 0 ? 'text-green-400' : 'text-red-400']}>{code === 0 ? '✓' : '✗'}</span>
+                <span class="flex-1 text-cyan-400">{tool}</span>
+                <span class="text-zinc-500">{action}</span>
+                <span class="hidden text-zinc-600 sm:inline">{duration}</span>
+                <span class="text-zinc-700">{time}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="output" class="bg-zinc-900/30 py-20">
+      <div class="section-wrap">
+        <div class="mb-14 space-y-3 text-center">
+          <h2 class="text-3xl font-bold sm:text-4xl">Real execution. <span class="gradient-text">Real output.</span></h2>
+          <p class="text-lg text-zinc-400">ANSI-aware streaming with scroll, pause, resume, and elapsed timers.</p>
+        </div>
+        <div class="mx-auto grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { icon: '🎨', title: 'ANSI-aware', desc: 'Colors, bold, and dim preserved from Ansible output.' },
+            { icon: '⏸', title: 'Pause / Resume', desc: 'Space pauses auto-scroll and resumes when you want.' },
+            { icon: '⏱', title: 'Elapsed time', desc: 'Live timer from the first byte to process exit.' },
+            { icon: '📜', title: 'Scroll controls', desc: 'Arrow keys scroll while auto-follow stays available.' },
+            { icon: '✂', title: 'Smart clipping', desc: 'Output is clipped to fit terminal constraints cleanly.' },
+            { icon: '🔗', title: 'OSC 8 stripping', desc: 'Hyperlinks are stripped before display for safety.' },
+            { icon: '🌈', title: 'Color defaults', desc: 'Color-friendly env vars are pre-set automatically.' },
+            { icon: '🔄', title: 'Wrap modes', desc: 'Wrap or plain-text mode based on tool output needs.' },
+          ].map(({ icon, title, desc }) => (
+            <div class="space-y-2 rounded-lg border border-zinc-800 bg-zinc-900 p-4 text-center">
+              <span class="text-2xl">{icon}</span>
+              <h3 class="text-sm font-semibold text-zinc-200">{title}</h3>
+              <p class="text-xs leading-relaxed text-zinc-500">{desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="enterprise" class="py-20">
+      <div class="section-wrap">
+        <div class="mx-auto max-w-4xl space-y-8">
+          <div class="space-y-5 text-center">
+            <h2 class="text-3xl font-bold">Built for the <span class="gradient-text">corporate network</span></h2>
+            <div class="flex flex-wrap items-center justify-center gap-3">
+              {[
+                'Proxy-aware execution',
+                'Offline install',
+                'Jump host ready',
+                'No Docker required',
+                'No root required',
+                'Local-first secrets',
+              ].map((item) => (
+                <span class="badge-zinc">{item}</span>
+              ))}
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div class="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
+              <h3 class="mb-3 font-mono text-sm font-semibold text-zinc-300">Offline install workflow</h3>
+              <div class="code-block space-y-1 text-xs">
+                <p class="text-zinc-600"># On a connected machine:</p>
+                <p><span class="text-zinc-600">$</span> <span class="text-cyan-400">npm pack @3a2dev/ansi-tui</span></p>
+                <p><span class="text-zinc-600">$</span> <span class="text-cyan-400">curl -fsSL https://raw.githubusercontent.com/3A2DEV/ansi-tui/main/install.sh -o install.sh</span></p>
+                <p class="mt-2 text-zinc-600"># Copy install.sh and 3a2dev-ansi-tui-0.1.0.tgz to target</p>
+                <p class="text-zinc-600"># Then on the air-gapped host:</p>
+                <p><span class="text-zinc-600">$</span> <span class="text-cyan-400">chmod +x install.sh</span></p>
+                <p><span class="text-zinc-600">$</span> <span class="text-cyan-400">./install.sh --local ./3a2dev-ansi-tui-0.1.0.tgz</span></p>
+              </div>
+            </div>
+
+            <div class="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
+              <h3 class="mb-3 font-mono text-sm font-semibold text-zinc-300">Proxy session override</h3>
+              <div class="code-block space-y-1 text-xs">
+                <p class="text-zinc-600"># Session env vars (highest priority)</p>
+                <p><span class="text-cyan-400">HTTPS_PROXY</span>=<span class="text-green-400">http://proxy.corp:8080</span></p>
+                <p><span class="text-cyan-400">NO_PROXY</span>=<span class="text-green-400">localhost,10.0.0.0/8</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="quality" class="bg-zinc-900/30 py-20">
+      <div class="section-wrap">
+        <div class="mb-14 space-y-3 text-center">
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            Tested in every PR. <span class="gradient-text">Scanned continuously.</span>
+          </h2>
+          <p class="mx-auto max-w-3xl text-lg text-zinc-400">
+            The `ansi-tui` repository runs a dedicated `npm-tests.yml` workflow on every pull request and layers security monitoring on top with Dependabot and CodeQL.
+          </p>
+        </div>
+
+        <div class="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-2">
+          <div class="space-y-4 rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+            <div class="flex items-center justify-between gap-4 border-b border-zinc-800 pb-4">
+              <div>
+                <h3 class="text-lg font-semibold text-zinc-100">GitHub Actions PR Gate</h3>
+                <p class="mt-1 text-sm text-zinc-500">
+                  Triggered on `opened`, `synchronize`, `reopened`, and `ready_for_review`.
+                </p>
+              </div>
+              <span class="badge-cyan">npm-tests.yml</span>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-4">
+                <h4 class="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">Package readiness</h4>
+                <div class="space-y-2 text-sm text-zinc-400">
+                  {[
+                    'npm ci',
+                    'npm run typecheck',
+                    'npm run lint',
+                    'npm test',
+                    'npm run build',
+                    'npm run pack:check',
+                  ].map((step) => (
+                    <div class="flex items-center gap-2">
+                      <span class="text-cyan-400">✓</span>
+                      <code class="font-mono text-xs text-zinc-300">{step}</code>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-4">
+                <h4 class="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">Matrix test suite</h4>
+                <div class="space-y-3 text-sm text-zinc-400">
+                  <div>
+                    <p class="mb-1 text-xs uppercase tracking-wide text-zinc-600">Node versions</p>
+                    <div class="flex flex-wrap gap-2">
+                      {['20', '22', '24'].map((version) => (
+                        <span class="badge-zinc">Node {version}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <p class="mb-1 text-xs uppercase tracking-wide text-zinc-600">Suites</p>
+                    <div class="flex flex-wrap gap-2">
+                      {['core', 'tools', 'components', 'screens', 'hooks'].map((suite) => (
+                        <span class="badge-zinc">{suite}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <p class="text-xs leading-relaxed text-zinc-500">
+                    Each matrix job runs <code class="font-mono text-zinc-300">npm run test:&lt;suite&gt;</code> on the selected Node version.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4 rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+            <div class="border-b border-zinc-800 pb-4">
+              <h3 class="text-lg font-semibold text-zinc-100">Security and code quality</h3>
+              <p class="mt-1 text-sm text-zinc-500">Automated dependency monitoring plus repository-level static analysis.</p>
+            </div>
+
+            <div class="space-y-4">
+              <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <h4 class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-violet-400">Dependabot</h4>
+                  <span class="badge-violet">security updates</span>
+                </div>
+                <p class="mt-3 text-sm leading-relaxed text-zinc-400">
+                  The repository uses Dependabot to surface dependency vulnerabilities and keep the Node package graph current.
+                </p>
+              </div>
+
+              <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <h4 class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-green-400">CodeQL</h4>
+                  <span class="badge-green">maintainability + reliability</span>
+                </div>
+                <p class="mt-3 text-sm leading-relaxed text-zinc-400">
+                  GitHub CodeQL scans the codebase for security issues and code quality risks, including maintainability and reliability signals.
+                </p>
+              </div>
+
+              <div class="code-block space-y-1 text-xs">
+                <p class="text-zinc-600"># PR validation snapshot</p>
+                <p><span class="text-zinc-600">workflow:</span> <span class="text-cyan-400">npm-tests.yml</span></p>
+                <p><span class="text-zinc-600">checks:</span> <span class="text-green-400">typecheck</span>, <span class="text-green-400">lint</span>, <span class="text-green-400">full tests</span>, <span class="text-green-400">build</span>, <span class="text-green-400">pack check</span></p>
+                <p><span class="text-zinc-600">security:</span> <span class="text-violet-400">Dependabot</span> + <span class="text-cyan-400">CodeQL</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="dependencies"><DependencyMatrix /></div>
+  </main>
+  <Footer />
+</Base>
