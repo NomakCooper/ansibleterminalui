@@ -3,11 +3,34 @@ import DependencyMatrix from '../components/DependencyMatrix.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import Base from '../layouts/Base.astro';
+
+const featuresUrl = new URL('/features/', Astro.site).toString();
+const structuredData = [
+  {
+    '@type': 'BreadcrumbList',
+    '@id': `${featuresUrl}#breadcrumbs`,
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: new URL('/', Astro.site).toString() },
+      { '@type': 'ListItem', position: 2, name: 'Features', item: featuresUrl },
+    ],
+  },
+  {
+    '@type': 'CollectionPage',
+    '@id': `${featuresUrl}#collection`,
+    url: featuresUrl,
+    name: 'ansi-tui features',
+    description:
+      'Detailed feature guide for ansi-tui covering sessions, job history, live output, dependency inventory, and enterprise-focused Ansible workflows.',
+    about: { '@type': 'SoftwareApplication', name: 'ansi-tui' },
+  },
+];
 ---
 
 <Base
-  title="Features — ansi-tui"
-  description="Detailed ansi-tui feature breakdown: guided workflow, tool coverage, sessions, job history, live output, themes, and enterprise support."
+  title="ansi-tui Features: Sessions, Job History, Live Output and Ansible Workflow Details"
+  description="Detailed ansi-tui feature guide covering sessions, job history, live output, enterprise support, dependency inventory, and keyboard-first Ansible workflows."
+  ogImageAlt="ansi-tui features page preview for Ansible workflow details"
+  structuredData={structuredData}
 >
   <Header />
   <main>
@@ -182,10 +205,10 @@ import Base from '../layouts/Base.astro';
                 <p class="text-zinc-600"># On a connected machine:</p>
                 <p><span class="text-zinc-600">$</span> <span class="text-cyan-400">npm pack @3a2dev/ansi-tui</span></p>
                 <p><span class="text-zinc-600">$</span> <span class="text-cyan-400">curl -fsSL https://raw.githubusercontent.com/3A2DEV/ansi-tui/main/install.sh -o install.sh</span></p>
-                <p class="mt-2 text-zinc-600"># Copy install.sh and 3a2dev-ansi-tui-0.1.0.tgz to target</p>
+                <p class="mt-2 text-zinc-600" data-package-template="# Copy install.sh and {{tarball}} to target"># Copy install.sh and 3a2dev-ansi-tui-0.1.0.tgz to target</p>
                 <p class="text-zinc-600"># Then on the air-gapped host:</p>
                 <p><span class="text-zinc-600">$</span> <span class="text-cyan-400">chmod +x install.sh</span></p>
-                <p><span class="text-zinc-600">$</span> <span class="text-cyan-400">./install.sh --local ./3a2dev-ansi-tui-0.1.0.tgz</span></p>
+                <p><span class="text-zinc-600">$</span> <span class="text-cyan-400" data-package-template="./install.sh --local ./{{tarball}}">./install.sh --local ./3a2dev-ansi-tui-0.1.0.tgz</span></p>
               </div>
             </div>
 

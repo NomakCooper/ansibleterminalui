@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { usePackageMeta } from '../hooks/usePackageMeta';
+import { fillPackageTemplate } from '../utils/packageMeta';
 
 type Tab = 'global' | 'npx' | 'script' | 'offline';
 
@@ -9,7 +11,7 @@ const tabs: Array<{ id: Tab; label: string }> = [
   { id: 'offline', label: 'offline / air-gapped' },
 ];
 
-const content: Record<Tab, { lines: Array<{ text: string; comment?: boolean; prompt?: boolean }> }> = {
+const content: Record<Tab, { lines: Array<{ text: string; template?: string; comment?: boolean; prompt?: boolean }> }> = {
   global: {
     lines: [
       { text: 'npm install -g @3a2dev/ansi-tui', prompt: true },
@@ -37,7 +39,11 @@ const content: Record<Tab, { lines: Array<{ text: string; comment?: boolean; pro
       { text: '', prompt: false },
       { text: '# copy the tarball and install.sh to the target, then:', comment: true },
       { text: 'chmod +x install.sh', prompt: true },
-      { text: './install.sh --local ./3a2dev-ansi-tui-0.1.0.tgz', prompt: true },
+      {
+        text: './install.sh --local ./3a2dev-ansi-tui-0.1.0.tgz',
+        template: './install.sh --local ./{{tarball}}',
+        prompt: true,
+      },
     ],
   },
 };
@@ -45,10 +51,11 @@ const content: Record<Tab, { lines: Array<{ text: string; comment?: boolean; pro
 export default function InstallTabs() {
   const [active, setActive] = useState<Tab>('global');
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'unsupported'>('idle');
+  const packageMeta = usePackageMeta();
 
   const commandText = content[active].lines
     .filter((line) => line.prompt)
-    .map((line) => line.text)
+    .map((line) => (line.template && packageMeta ? fillPackageTemplate(line.template, packageMeta) : line.text))
     .join('\n');
 
   const handleCopy = async () => {
@@ -99,7 +106,9 @@ export default function InstallTabs() {
               ) : line.prompt ? (
                 <>
                   <span className="shrink-0 select-none text-zinc-600">$</span>
-                  <span className="text-cyan-400">{line.text}</span>
+                  <span className="text-cyan-400">
+                    {line.template && packageMeta ? fillPackageTemplate(line.template, packageMeta) : line.text}
+                  </span>
                 </>
               ) : (
                 <span className="block h-4 text-zinc-800">&nbsp;</span>

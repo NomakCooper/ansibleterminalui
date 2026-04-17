@@ -8,8 +8,6 @@ export interface Dependency {
   why: string;
 }
 
-export const packageVersion = '0.1.0';
-
 export const runtimeDependencies: Dependency[] = [
   {
     name: 'chalk',

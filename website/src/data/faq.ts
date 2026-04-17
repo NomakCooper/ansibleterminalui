@@ -1,6 +1,7 @@
 export interface FAQItem {
   q: string;
   a: string;
+  template?: string;
 }
 
 export const faq: FAQItem[] = [
@@ -31,5 +32,7 @@ export const faq: FAQItem[] = [
   {
     q: 'Can I install it offline or air-gapped?',
     a: 'Yes. Run npm pack @3a2dev/ansi-tui on a connected machine, download install.sh from the repository, copy both files to the target, then run ./install.sh --local ./3a2dev-ansi-tui-0.1.0.tgz.',
+    template:
+      'Yes. Run npm pack {{package}} on a connected machine, download install.sh from the repository, copy both files to the target, then run ./install.sh --local ./{{tarball}}.',
   },
 ];

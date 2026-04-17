@@ -4,11 +4,63 @@ import Header from '../components/Header.astro';
 import InstallSimulation from '../components/InstallSimulation.astro';
 import InstallTabs from '../components/InstallTabs';
 import Base from '../layouts/Base.astro';
+
+const installUrl = new URL('/install/', Astro.site).toString();
+const structuredData = [
+  {
+    '@type': 'BreadcrumbList',
+    '@id': `${installUrl}#breadcrumbs`,
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: new URL('/', Astro.site).toString() },
+      { '@type': 'ListItem', position: 2, name: 'Install', item: installUrl },
+    ],
+  },
+  {
+    '@type': 'HowTo',
+    '@id': `${installUrl}#howto`,
+    name: 'Install ansi-tui',
+    description: 'Install ansi-tui globally with npm, run it with npx, use install.sh, or deploy it offline to air-gapped systems.',
+    totalTime: 'PT5M',
+    tool: [
+      { '@type': 'HowToTool', name: 'Node.js 18+' },
+      { '@type': 'HowToTool', name: 'Modern terminal' },
+      { '@type': 'HowToTool', name: 'Ansible CLI tools' },
+    ],
+    step: [
+      {
+        '@type': 'HowToStep',
+        position: 1,
+        name: 'Install globally with npm',
+        text: 'Run npm install -g @3a2dev/ansi-tui and then start ansi-tui from your terminal.',
+      },
+      {
+        '@type': 'HowToStep',
+        position: 2,
+        name: 'Run without installing',
+        text: 'Use npx @3a2dev/ansi-tui for ephemeral execution on a connected machine.',
+      },
+      {
+        '@type': 'HowToStep',
+        position: 3,
+        name: 'Use the install script',
+        text: 'Clone the repository and run ./install.sh for a scripted installation path.',
+      },
+      {
+        '@type': 'HowToStep',
+        position: 4,
+        name: 'Install offline',
+        text: 'Create an npm pack tarball on a connected machine, copy it with install.sh, then run the local install command on the target host.',
+      },
+    ],
+  },
+];
 ---
 
 <Base
-  title="Install — ansi-tui"
-  description="Install ansi-tui globally with npm, run it with npx, use the install script, or deploy it offline to air-gapped hosts."
+  title="Install ansi-tui: npm, npx, install.sh and Offline Air-Gapped Setup"
+  description="Install ansi-tui globally with npm, run it with npx, use install.sh, or deploy it offline to air-gapped hosts with local tarball installation."
+  ogImageAlt="ansi-tui installation guide preview with terminal install workflow"
+  structuredData={structuredData}
 >
   <Header />
   <main>

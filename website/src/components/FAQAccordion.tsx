@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { usePackageMeta } from '../hooks/usePackageMeta';
 import type { FAQItem } from '../data/faq';
+import { fillPackageTemplate } from '../utils/packageMeta';
 
 interface Props {
   items: FAQItem[];
@@ -7,10 +9,11 @@ interface Props {
 
 export default function FAQAccordion({ items }: Props) {
   const [open, setOpen] = useState<number | null>(0);
+  const packageMeta = usePackageMeta();
 
   return (
     <div className="mx-auto max-w-3xl space-y-2">
-      {items.map(({ q, a }, idx) => (
+      {items.map(({ q, a, template }, idx) => (
         <div key={idx} className="overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900">
           <button
             type="button"
@@ -32,7 +35,9 @@ export default function FAQAccordion({ items }: Props) {
 
           {open === idx && (
             <div className="px-5 pb-4">
-              <p className="border-t border-zinc-800 pt-4 text-sm leading-relaxed text-zinc-400">{a}</p>
+              <p className="border-t border-zinc-800 pt-4 text-sm leading-relaxed text-zinc-400">
+                {template && packageMeta ? fillPackageTemplate(template, packageMeta) : a}
+              </p>
             </div>
           )}
         </div>

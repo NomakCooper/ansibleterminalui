@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
+import { usePackageMeta } from '../hooks/usePackageMeta';
+import { fillPackageTemplate } from '../utils/packageMeta';
 
 type PromptLine = {
   kind: 'prompt';
@@ -11,6 +13,7 @@ type PromptLine = {
 type OutputLine = {
   kind: 'output';
   text: string;
+  template?: string;
   tone?: 'default' | 'success' | 'muted';
   hold: number;
 };
@@ -39,10 +42,10 @@ const simulationLines: SimulationLine[] = [
   { kind: 'output', text: '  run `npm fund` for details', tone: 'muted', hold: 650 },
   { kind: 'blank', hold: 260 },
   { kind: 'prompt', prompt: shellPrompt, command: 'ansi-tui -v', hold: 350, typeSpeed: 18 },
-  { kind: 'output', text: '0.1.0', tone: 'success', hold: 400 },
+  { kind: 'output', text: '0.1.0', template: '{{version}}', tone: 'success', hold: 400 },
 ];
 
-function renderLine(line: SimulationLine, typedCommand?: string) {
+function renderLine(line: SimulationLine, packageMeta: ReturnType<typeof usePackageMeta>, typedCommand?: string) {
   if (line.kind === 'blank') {
     return <div className="h-3" aria-hidden="true" />;
   }
@@ -55,7 +58,7 @@ function renderLine(line: SimulationLine, typedCommand?: string) {
           ? 'text-zinc-500'
           : 'text-zinc-300';
 
-    return <div className={toneClass}>{line.text}</div>;
+    return <div className={toneClass}>{line.template && packageMeta ? fillPackageTemplate(line.template, packageMeta) : line.text}</div>;
   }
 
   return (
@@ -70,6 +73,7 @@ function renderLine(line: SimulationLine, typedCommand?: string) {
 }
 
 export default function InstallSimulation() {
+  const packageMeta = usePackageMeta();
   const [displayedCount, setDisplayedCount] = useState(0);
   const [typingCommand, setTypingCommand] = useState<string | null>(null);
   const [typingIndex, setTypingIndex] = useState<number | null>(null);
@@ -184,11 +188,11 @@ export default function InstallSimulation() {
         </button>
       </div>
 
-      <div className="space-y-1 overflow-x-auto bg-zinc-950 px-5 py-5 font-mono text-sm leading-relaxed">
-        {visibleLines.map((line, index) => (
-          <div key={index}>{renderLine(line)}</div>
+        <div className="space-y-1 overflow-x-auto bg-zinc-950 px-5 py-5 font-mono text-sm leading-relaxed">
+          {visibleLines.map((line, index) => (
+          <div key={index}>{renderLine(line, packageMeta)}</div>
         ))}
-        {activePrompt ? <div>{renderLine(activePrompt, typingCommand ?? '')}</div> : null}
+        {activePrompt ? <div>{renderLine(activePrompt, packageMeta, typingCommand ?? '')}</div> : null}
       </div>
     </div>
   );

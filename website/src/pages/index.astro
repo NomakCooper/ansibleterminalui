@@ -12,9 +12,83 @@ import ToolCoverage from '../components/ToolCoverage.astro';
 import WorkflowDiagram from '../components/WorkflowDiagram.astro';
 import { faq } from '../data/faq';
 import Base from '../layouts/Base.astro';
+
+const homeUrl = new URL('/', Astro.site).toString();
+const softwareId = `${homeUrl}#software`;
+
+function faqAnswerText(answer: string, template?: string) {
+  return (template ?? answer)
+    .replaceAll('{{package}}', '@3a2dev/ansi-tui')
+    .replaceAll('{{tarball}}', 'downloaded-package.tgz')
+    .replaceAll('{{version}}', 'latest')
+    .replaceAll('{{downloadsCompact}}', 'latest monthly downloads')
+    .replaceAll('{{downloadsFull}}', 'latest monthly downloads')
+    .replaceAll('{{downloadsLabel}}', 'latest monthly downloads');
+}
+
+const structuredData = [
+  {
+    '@type': 'SoftwareApplication',
+    '@id': softwareId,
+    name: 'ansi-tui',
+    alternateName: 'Ansible Terminal User Interface',
+    applicationCategory: 'DeveloperApplication',
+    applicationSubCategory: 'Terminal User Interface',
+    operatingSystem: 'macOS, Linux',
+    softwareRequirements: 'Node.js 18+, ansible-core and relevant Ansible CLI tools',
+    isAccessibleForFree: true,
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    description:
+      'Open source Ansible terminal UI for playbooks, vault, lint, inventory, galaxy, builder, test, and more with guided forms, live output, sessions, and offline installation.',
+    url: homeUrl,
+    downloadUrl: 'https://www.npmjs.com/package/@3a2dev/ansi-tui',
+    installUrl: new URL('/install/', Astro.site).toString(),
+    codeRepository: 'https://github.com/3A2DEV/ansi-tui',
+    license: 'https://github.com/3A2DEV/ansi-tui/blob/main/LICENSE',
+    screenshot: [new URL('/banner.png', Astro.site).toString()],
+    featureList: [
+      'Guided workflows for ansible-playbook, ansible-vault, ansible-lint, inventory, galaxy, and more',
+      'Live terminal output with ANSI-aware rendering and job history',
+      'Workspace sessions with persistent execution context',
+      'Keyboard-first terminal UX with local-first storage',
+      'Offline and air-gapped installation support',
+    ],
+  },
+  {
+    '@type': 'SoftwareSourceCode',
+    '@id': `${homeUrl}#source-code`,
+    name: 'ansi-tui',
+    codeRepository: 'https://github.com/3A2DEV/ansi-tui',
+    programmingLanguage: ['TypeScript', 'JavaScript'],
+    runtimePlatform: 'Node.js 18+',
+    targetProduct: { '@id': softwareId },
+    license: 'https://github.com/3A2DEV/ansi-tui/blob/main/LICENSE',
+  },
+  {
+    '@type': 'FAQPage',
+    '@id': `${homeUrl}#faq`,
+    mainEntity: faq.map(({ q, a, template }) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faqAnswerText(a, template),
+      },
+    })),
+  },
+];
 ---
 
-<Base>
+<Base
+  title="ansi-tui: Ansible Terminal UI for Playbooks, Vault, Lint, Inventory and More"
+  description="Open source Ansible terminal UI for ansible-playbook, ansible-vault, ansible-lint, inventory, galaxy, builder, test, and more. Guided forms, live output, sessions, and offline install."
+  ogImageAlt="ansi-tui terminal UI preview showing guided Ansible workflows"
+  structuredData={structuredData}
+>
   <Header />
   <main>
     <Hero />

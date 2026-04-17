@@ -1,20 +1,68 @@
 ---
 import '../styles/global.css';
+import { PACKAGE_DOWNLOADS_URL, PACKAGE_META_EVENT, PACKAGE_REGISTRY_URL } from '../utils/packageMeta';
 
 export interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  ogImageAlt?: string;
+  robots?: string;
+  structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
 const {
   title = 'ansi-tui — The terminal UI for Ansible engineers',
   description = 'A wizard-driven TUI for the entire Ansible toolchain. 11 tools, 60+ actions, live output, session persistence, 8 themes. npm install -g @3a2dev/ansi-tui',
-  ogImage = '/banner.png',
+  ogImage = '/social.png',
+  ogImageAlt = 'ansi-tui homepage preview showing the terminal user interface and guided Ansible workflow',
+  robots = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+  structuredData = [],
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL(ogImage, Astro.site);
+const organizationId = new URL('/#organization', Astro.site).toString();
+const websiteId = new URL('/#website', Astro.site).toString();
+const webpageId = `${canonicalURL.toString()}#webpage`;
+const structuredDataItems = Array.isArray(structuredData) ? structuredData : [structuredData];
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': organizationId,
+      name: '3A2DEV',
+      url: 'https://github.com/3A2DEV',
+      logo: new URL('/3a2dev.svg', Astro.site).toString(),
+      sameAs: ['https://github.com/3A2DEV', 'https://www.npmjs.com/package/@3a2dev/ansi-tui'],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': websiteId,
+      url: new URL('/', Astro.site).toString(),
+      name: 'ansi-tui',
+      description,
+      inLanguage: 'en-US',
+      publisher: { '@id': organizationId },
+    },
+    {
+      '@type': 'WebPage',
+      '@id': webpageId,
+      url: canonicalURL.toString(),
+      name: title,
+      description,
+      inLanguage: 'en-US',
+      isPartOf: { '@id': websiteId },
+      about: { name: 'ansi-tui' },
+      primaryImageOfPage: {
+        '@type': 'ImageObject',
+        url: ogImageURL.toString(),
+      },
+    },
+    ...structuredDataItems,
+  ],
+});
 ---
 
 <!doctype html>
@@ -23,30 +71,165 @@ const ogImageURL = new URL(ogImage, Astro.site);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#09090b" />
+    <meta name="robots" content={robots} />
+    <meta name="author" content="3A2DEV" />
+    <meta name="application-name" content="ansi-tui" />
 
     <meta name="google-site-verification" content="ORZk9i53sqwFGhIby0NVa3CAfnV8h9bnNRtNtl52Vv8" />
 
     <link rel="canonical" href={canonicalURL} />
+    <link rel="sitemap" type="application/xml" href={new URL('/sitemap-index.xml', Astro.site)} />
 
     <title>{title}</title>
     <meta name="description" content={description} />
 
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ansi-tui" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:alt" content={ogImageAlt} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageURL} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
     <link rel="icon" type="image/svg+xml" href="/3a2dev.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <script is:inline type="application/ld+json" set:html={jsonLd}></script>
   </head>
   <body class="flex min-h-screen flex-col bg-zinc-950 text-zinc-50">
     <slot />
+    <script
+      is:inline
+      define:vars={{ PACKAGE_DOWNLOADS_URL, PACKAGE_META_EVENT, PACKAGE_REGISTRY_URL }}
+    >
+      const compactFormatter = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
+      const fullFormatter = new Intl.NumberFormat('en-US');
+
+      const fillPackageTemplate = (template, meta) =>
+        template
+          .replaceAll('{{version}}', meta.version)
+          .replaceAll('{{tarball}}', meta.tarball)
+          .replaceAll('{{downloadsCompact}}', meta.downloadsCompact)
+          .replaceAll('{{downloadsFull}}', meta.downloadsFull)
+          .replaceAll('{{downloadsLabel}}', meta.downloadsLabel)
+          .replaceAll('{{package}}', '@3a2dev/ansi-tui');
+
+      const applyPackageMeta = (root, meta) => {
+        const elements = [];
+
+        if (root instanceof Element && root.matches('[data-package-template]')) {
+          elements.push(root);
+        }
+
+        if (root && typeof root === 'object' && 'querySelectorAll' in root) {
+          elements.push(...root.querySelectorAll('[data-package-template]'));
+        }
+
+        elements.forEach((element) => {
+          const template = element.getAttribute('data-package-template');
+
+          if (!template) {
+            return;
+          }
+
+          element.textContent = fillPackageTemplate(template, meta);
+        });
+      };
+
+      const fetchPackageMeta = async () => {
+        const [registryResponse, downloadsResponse] = await Promise.all([
+          fetch(PACKAGE_REGISTRY_URL),
+          fetch(PACKAGE_DOWNLOADS_URL),
+        ]);
+
+        if (!registryResponse.ok) {
+          throw new Error(`npm registry request failed: ${registryResponse.status}`);
+        }
+
+        if (!downloadsResponse.ok) {
+          throw new Error(`npm downloads request failed: ${downloadsResponse.status}`);
+        }
+
+        const registryData = await registryResponse.json();
+        const downloadsData = await downloadsResponse.json();
+
+        if (typeof registryData.version !== 'string') {
+          throw new Error('npm registry response missing version');
+        }
+
+        if (typeof downloadsData.downloads !== 'number') {
+          throw new Error('npm downloads response missing count');
+        }
+
+        const version = registryData.version;
+        const downloads = downloadsData.downloads;
+
+        return {
+          version,
+          tarball: `3a2dev-ansi-tui-${version}.tgz`,
+          downloads,
+          downloadsCompact: compactFormatter.format(downloads),
+          downloadsFull: fullFormatter.format(downloads),
+          downloadsLabel: `${fullFormatter.format(downloads)} npm downloads`,
+        };
+      };
+
+      const observePackageTemplates = () => {
+        if (window.__ANSI_TUI_PACKAGE_META_OBSERVER__) {
+          return;
+        }
+
+        const observer = new MutationObserver((mutations) => {
+          if (!window.__ANSI_TUI_PACKAGE_META__) {
+            return;
+          }
+
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node instanceof Element) {
+                applyPackageMeta(node, window.__ANSI_TUI_PACKAGE_META__);
+              }
+            });
+          });
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+        window.__ANSI_TUI_PACKAGE_META_OBSERVER__ = observer;
+      };
+
+      const ensurePackageMeta = async () => {
+        observePackageTemplates();
+
+        if (window.__ANSI_TUI_PACKAGE_META__) {
+          applyPackageMeta(document.body, window.__ANSI_TUI_PACKAGE_META__);
+          return window.__ANSI_TUI_PACKAGE_META__;
+        }
+
+        if (!window.__ANSI_TUI_PACKAGE_META_PROMISE__) {
+          window.__ANSI_TUI_PACKAGE_META_PROMISE__ = fetchPackageMeta()
+            .then((meta) => {
+              window.__ANSI_TUI_PACKAGE_META__ = meta;
+              applyPackageMeta(document.body, meta);
+              window.dispatchEvent(new CustomEvent(PACKAGE_META_EVENT, { detail: meta }));
+              return meta;
+            })
+            .catch((error) => {
+              console.error(error);
+              return null;
+            });
+        }
+
+        return window.__ANSI_TUI_PACKAGE_META_PROMISE__;
+      };
+
+      void ensurePackageMeta();
+    </script>
   </body>
 </html>
